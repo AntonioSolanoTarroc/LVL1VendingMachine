@@ -1,1 +1,3 @@
 STORE_API_PRIVATE_KEY = "mysecretpassphrase"
+LVL1_SQL_USER = "example"
+LVL1_SQL_PASSWORD = "password"
