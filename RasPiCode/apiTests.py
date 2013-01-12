@@ -1,9 +1,9 @@
 from generateApiJson import generate
 import urllib2
 import json
+from API_KEY import STORE_API_PRIVATE_KEY
 
 STORE_API_URL = "http://192.168.1.104/opencart/index.php?route=api/api"
-STORE_API_PRIVATE_KEY = "F_cJg-36.._9-3_2-UM.540mSwz50__..-.qZ-98w77-7_2Lm91_lf_EmHLl_y-"
 
 def get_product_list(order_id):
     api_request = {'command': 'getProductsByInvoice', 'data': str(order_id)}
