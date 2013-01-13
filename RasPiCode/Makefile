@@ -1,8 +1,8 @@
 TARGET = raspiInterface
-LIBS = -lm -lpython2.7
+LIBS = -lm -lpython2.7 -lwiringPi -lpthread
 INCLUDES = -I/usr/include/python2.7/
 CC = gcc
-CFLAGS = -g -Wall -std=gnu99
+CFLAGS = -g -Wall -std=gnu99 -L/usr/local/lib
 
 .PHONY: default all clean
 

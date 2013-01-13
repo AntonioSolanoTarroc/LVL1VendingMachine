@@ -1,4 +1,12 @@
+//python_h must be included first
 #include <Python.h>
+
+#include <stdio.h>
+#include <signal.h>
+
+#include "buttons_irq_test.h"
+
+#include "wiegandReader.h"
 
 #define PYTHONMODULE "apiTests"
 
@@ -8,6 +16,16 @@ int getProductList(int invoiceNumber, int * rProductIds, int max_size);
 int markOrderComplete(int invoiceNumber);
 int createOrder(int cardId, int slotNumber);
 
+void INThandler(int);
+
+void printCard(unsigned long code)
+{
+      // Prints out the results
+      printf ("TagID: %lx\n\n", code<<1); fflush (stdout); 
+	  return;
+}
+
+
 int main(int argc, char *argv[])
 {
 
@@ -15,7 +33,23 @@ int main(int argc, char *argv[])
 	
 	initPythonFunctions();
 
-	int ids[22] = {[0 ... 21] = 0}; //Probably not necessary
+	setup();
+
+	addCardCallback(&printCard);
+
+	test_i2c();
+
+	startCardReaderThreads();
+
+	while(1)
+	{
+		if(PyErr_CheckSignals() == -1)
+		{
+			INThandler(2);
+		}
+	}
+
+	/*int ids[22] = {[0 ... 21] = 0}; //Probably not necessary
 	int items = getProductList(111113, ids, 22);
 
 	printf("Returned Array: [");
@@ -30,10 +64,21 @@ int main(int argc, char *argv[])
 
 	rv = 0;
 	rv = createOrder(111113, 3);
-	printf("Returned Create Order: %d\n", rv);
+	printf("Returned Create Order: %d\n", rv);*/
+
+
 
 	Py_Finalize();
 	return 0;
+
+}
+
+void INThandler(int sig)
+{
+
+	signal(sig, SIG_IGN);
+	Py_Finalize();
+	exit(0);
 
 }
 
